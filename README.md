@@ -11,6 +11,7 @@ Playlist of records on YouTube: https://www.youtube.com/playlist?list=PLI_Ss2fLP
 * Charts drawing was realised
 ___
 In plans:
+* Still can not implement parallelism for make the agent moving and thinking the same time, but not in a sequenced.
 * <s>Connect it with the drawn neuralnet for its working visualisation [if there is any sense for that]</s>
 * [Optional] Make a game more challengeable
 
