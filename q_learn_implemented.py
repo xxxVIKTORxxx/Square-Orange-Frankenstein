@@ -631,8 +631,8 @@ def SimpleGame():
 
                 #keras_pred()
                 #NN_move()
-                p1.run()
-                p2.run()
+                p2.run() # Think
+                p1.run()  # Move
 
 
             # goal
@@ -705,7 +705,7 @@ def SimpleGame():
 #PROCESSES
 p1 = Process(name='NN act', target=NN_move)
 p2 = Process(name='NN think', target=keras_pred)
-#pmain = Process(name='Env', target=SimpleGame)
+pmain = Process(name='Env', target=SimpleGame)
 """
 if __name__ == '__main__':
     pmain.run()
@@ -724,4 +724,4 @@ if __name__ == '__main__':
     tmain.run()"""
 
 if __name__ == '__main__':
-    SimpleGame()
+    pmain.run()
