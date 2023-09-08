@@ -17,7 +17,7 @@ from tensorflow import keras
 from sklearn.model_selection import train_test_split
 
 from threading import Thread
-
+from multiprocessing import Process
 
 
 SIZE = 1200, 600
@@ -205,13 +205,13 @@ def current_state():
     
 
     curr_target = [X_targ_right, X_targ_left, Y_targ_down, Y_targ_up, targ_speed]
-    print('targ_state: ', target_state)
+    #print('targ_state: ', target_state)
     target_state = target_state._append(pd.Series(curr_target, index=target_state.columns[:len(curr_target)]), ignore_index=True)
 
     if target_state.shape[0] >= batch_size:
         target_state = target_state.tail(4)
 
-    print('state: \n', data_state)
+    #print('state: \n', data_state)
     return data_state, target_state
 
 
@@ -242,7 +242,7 @@ def train_keras():
     test_results = model.evaluate(ds_test, ts_test, verbose=1)
     try_loss.append(test_results[0])
     evaluation.append(test_results)
-    print(f'Test results - Loss: {test_results[0]} - Accuracy: {test_results[1]*100}%')
+    #print(f'Test results - Loss: {test_results[0]} - Accuracy: {test_results[1]*100}%')
 
 def keras_pred():
     global data_state
@@ -256,7 +256,7 @@ def keras_pred():
 
         y_pred = model.predict(data_state)
         # k_pred = np.argmax(y_pred, axis=1)
-        print('keras prediction: ', y_pred)
+        #print('keras prediction: ', y_pred)
         return y_pred
 
 
@@ -532,7 +532,7 @@ def fail():
 
     avg_loss.append(np.mean(try_loss))
     try_loss = []
-    print('AVG LOSS: ', avg_loss)
+    #print('AVG LOSS: ', avg_loss)
 
     record.append(score)
     scores.append(score)
@@ -563,10 +563,6 @@ def succeed():
     rect_target = Rect(target_x, target_y, 55, 55)
     life_length = _life_length
     # draw_chart(size)
-
-# THREADS
-#t1 = Thread(name='NN act', target=NN_move, args=())
-#t2 = Thread(name='NN think', target=keras_pred, args=())
 
 
 # while True
@@ -632,14 +628,11 @@ def SimpleGame():
                 ai_move()
 
             elif control == 'NN_based':
-                #if not t1.is_alive():
-                #    t1.run()
-                
-                    
-                #if not t2.is_alive():
-                #    t2.run()
-                keras_pred()
-                NN_move()
+
+                #keras_pred()
+                #NN_move()
+                p1.run()
+                p2.run()
 
 
             # goal
@@ -709,4 +702,26 @@ def SimpleGame():
         pygame.display.update()
         clock.tick(60)
 
-SimpleGame()
+#PROCESSES
+p1 = Process(name='NN act', target=NN_move)
+p2 = Process(name='NN think', target=keras_pred)
+#pmain = Process(name='Env', target=SimpleGame)
+"""
+if __name__ == '__main__':
+    pmain.run()
+    p1.run()
+    p2.run()"""
+
+"""
+#THREADS
+t1 = Thread(name='NN act', target=NN_move, args=())
+t2 = Thread(name='NN think', target=keras_pred, args=())
+tmain = Thread(name='Env', target=SimpleGame, args=())
+
+if __name__ == '__main__':
+    t1.run()
+    t2.run()
+    tmain.run()"""
+
+if __name__ == '__main__':
+    SimpleGame()
